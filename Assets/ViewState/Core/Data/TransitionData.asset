@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c7accc0c75a441cb0c44a406d1df20, type: 3}
+  m_Name: TransitionData
+  m_EditorClassIdentifier: 
+  TransitionDataSets:
+  - TransitionKey: 0
+    OnClip: {fileID: 7400000, guid: 062583b132c42460688baf13418bab9c, type: 2}
+    OffClip: {fileID: 7400000, guid: e9c878bb5fdd44770bba8ca177b43b44, type: 2}
+    Overlap: 0
+  - TransitionKey: 1
+    OnClip: {fileID: 7400000, guid: 3b3daf82d0fea4595b65f7df76019ed5, type: 2}
+    OffClip: {fileID: 7400000, guid: a45e7fc78172848039405d2d1704ad42, type: 2}
+    Overlap: 0
+  - TransitionKey: 2
+    OnClip: {fileID: 7400000, guid: 913750984702d49c48c39c643ca6a4d1, type: 2}
+    OffClip: {fileID: 7400000, guid: 01f2e5745844147e9b676623571a3da9, type: 2}
+    Overlap: 0
