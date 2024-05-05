@@ -50,6 +50,10 @@ namespace State
         {
             _exitingState.Interupt();
             _exitingState = null;
+
+            CurrentState?.Interupt();
+            CurrentState?.ExitState();
+            CurrentState = null;
         }
 
         private void ExitCurrentState()

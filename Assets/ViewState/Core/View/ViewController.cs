@@ -74,8 +74,8 @@ namespace View
 
             if (_exitingState != null)
             {
-                return;
-                //InterruptOngoingTransitions();
+                //return;
+                InterruptOngoingTransitions();
             }
 
             if (CurrentState == null || immediate)

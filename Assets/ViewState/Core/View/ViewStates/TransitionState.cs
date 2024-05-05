@@ -25,6 +25,7 @@ namespace View
             }
 
             Animation.clip = AnimationClip;
+            Animation[AnimationClip.name].normalizedTime = 0.0f;
             Animation.Play(AnimationClip.name);
         }
 
