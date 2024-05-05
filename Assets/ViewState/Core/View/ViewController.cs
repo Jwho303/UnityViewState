@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using State;
 using System;
 
@@ -9,23 +7,16 @@ namespace View
 {
     public class ViewController<TEnum> where TEnum : struct
     {
-        public TEnum CurrentView => CurrentState.ViewType;
+        public TEnum CurrentView => (CurrentState != null) ? CurrentState.ViewType : default;
         public IView<TEnum> CurrentState { get; private set; }
 
-        private Dictionary<TEnum, IView<TEnum>> _views = new Dictionary<TEnum, IView<TEnum>>();
+        private Dictionary<TEnum, IView<TEnum>> _views;
         private IView<TEnum> _exitingState;
+        private IView<TEnum> _incomingState;
 
         public ViewController(IView<TEnum>[] views, TEnum startState = default)
         {
-            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Assigning ({views.Length}) views");
-            for (int i = 0; i < views.Length; i++)
-            {
-                _views.Add(views[i].ViewType, views[i]);
-                views[i].OnTransitionOnCompleted += HandleViewTransitionOnCompleted;
-                views[i].OnTransitionOffCompleted += HandleViewTransitionOffCompleted;
-                views[i].Init();
-            }
-
+            InitializeViews(views);
             ChangeState(_views[startState]);
         }
 
@@ -35,41 +26,97 @@ namespace View
             CurrentState?.UpdateState();
         }
 
-        public void Show(TEnum viewToShow)
+        public void Show(TEnum viewToShow, bool immediate = true)
         {
-            if (!_views.ContainsKey(viewToShow))
+            if (!_views.TryGetValue(viewToShow, out var view))
             {
-                Debug.LogError($"[ViewController] No View! ({viewToShow})");
+                Debug.LogError($"[ViewController-{typeof(TEnum).Name}] No View! ({viewToShow})");
                 return;
             }
 
-            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Showing ({viewToShow})");
-            ChangeState(_views[viewToShow]);
+            ChangeState(view, immediate);
         }
 
-        public void Show(TEnum viewToShow, AnimationClip onClip, AnimationClip offClip)
+        public void Show(TEnum viewToShow, AnimationClip onClip, AnimationClip offClip, bool immediate = true)
         {
-            CurrentState.SetAnimationClips(onClip, offClip);
-            _views[viewToShow].SetAnimationClips(onClip, offClip);
-
-            Show(viewToShow);
+            if (_views.TryGetValue(viewToShow, out var view))
+            {
+                CurrentState?.SetAnimationClips(onClip, offClip);
+                view.SetAnimationClips(onClip, offClip);
+                Show(viewToShow, immediate);
+            }
+            else
+            {
+                Debug.LogError($"[ViewController-{typeof(TEnum).Name}] No View! ({viewToShow})");
+            }
         }
 
-        private void ChangeState(IView<TEnum> newState)
+        private void InitializeViews(IView<TEnum>[] views)
         {
-            if (CurrentState == newState || (CurrentState != null && CurrentState.Equals(newState)))
+            _views = new Dictionary<TEnum, IView<TEnum>>();
+            foreach (var view in views)
+            {
+                _views.Add(view.ViewType, view);
+                view.OnTransitionOnCompleted += HandleViewTransitionOnCompleted;
+                view.OnTransitionOffCompleted += HandleViewTransitionOffCompleted;
+                view.Init();
+            }
+        }
+
+        private void ChangeState(IView<TEnum> newState, bool immediate = true)
+        {
+            if (CurrentState == newState)
             {
                 return;
             }
 
-            if (CurrentState != null)
+            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Showing ({newState})");
+
+            if (_exitingState != null)
             {
-                _exitingState = CurrentState;
-                _exitingState.ExitState();
+                return;
+                //InterruptOngoingTransitions();
             }
+
+            if (CurrentState == null || immediate)
+            {
+                TransitionToStateImmediately(newState);
+            }
+            else
+            {
+                TransitionToStateSequentially(newState);
+            }
+        }
+
+        private void InterruptOngoingTransitions()
+        {
+            _exitingState?.Interupt();
+            _exitingState?.ExitState();
+            _exitingState = null;
+
+            CurrentState?.Interupt();
+            CurrentState?.ExitState();
+            CurrentState = null;
+
+            _incomingState = null;
+        }
+
+        private void TransitionToStateImmediately(IView<TEnum> newState)
+        {
+            _exitingState = CurrentState;
+            _exitingState?.ExitState();
 
             CurrentState = newState;
             CurrentState.EnterState();
+        }
+
+        private void TransitionToStateSequentially(IView<TEnum> newState)
+        {
+            _incomingState = newState;
+            _exitingState = CurrentState;
+            CurrentState = null;
+
+            _exitingState?.ExitState();
         }
 
         private void HandleViewTransitionOnCompleted()
@@ -79,7 +126,12 @@ namespace View
 
         private void HandleViewTransitionOffCompleted()
         {
-
+            if (_incomingState != null)
+            {
+                CurrentState = _incomingState;
+                CurrentState.EnterState();
+                _incomingState = null;
+            }
         }
     }
 }

@@ -19,13 +19,23 @@ namespace View
 
         public void EnterState()
         {
+            if (AnimationClip == null)
+            {
+                return;
+            }
+
             Animation.clip = AnimationClip;
             Animation.Play(AnimationClip.name);
         }
 
         public void UpdateState()
         {
-            Debug.Assert(Animation != null, "Animation is null!");
+            if (AnimationClip == null)
+            {
+                TransitionComplete();
+                return;
+            }
+
             Debug.Assert(AnimationClip != null, "Animation clip is null!");
             Debug.Assert(Animation[AnimationClip.name] != null, "Animation clip not assigned!");
 
@@ -47,7 +57,11 @@ namespace View
 
         private void TransitionComplete()
         {
-            Animation[AnimationClip.name].normalizedTime = 1.0f;
+            if (AnimationClip != null)
+            {
+                Animation[AnimationClip.name].normalizedTime = 1.0f;
+            }
+
             OnTransitionCompleteAction();
         }
     }

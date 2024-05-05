@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace State
 {
-    public class StateMachine : IStateMachine
+    public class StateMachine
     {
         public IState CurrentState { get; private set; }
         private IState _exitingState;
@@ -19,14 +19,20 @@ namespace State
                 return;
             }
 
-            if (CurrentState != null)
+            if (_exitingState != null)
             {
-                _exitingState = CurrentState;
-                _exitingState.ExitState();
+                InterruptOngoingTransitions();
             }
 
-            CurrentState = newState;
-            CurrentState.EnterState();
+            if (CurrentState == null)
+            {
+                EnterNewState(newState);
+            }
+            else
+            {
+                ExitCurrentState();
+                EnterNewState(newState);
+            }
         }
 
         public void Update()
@@ -38,6 +44,25 @@ namespace State
         public void StateExitComplete()
         {
             _exitingState = null;
+        }
+
+        private void InterruptOngoingTransitions()
+        {
+            _exitingState.Interupt();
+            _exitingState = null;
+        }
+
+        private void ExitCurrentState()
+        {
+            _exitingState = CurrentState;
+            _exitingState.ExitState();
+            CurrentState = null;
+        }
+
+        private void EnterNewState(IState newState)
+        {
+            CurrentState = newState;
+            CurrentState.EnterState();
         }
     }
 }

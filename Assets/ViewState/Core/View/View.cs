@@ -12,8 +12,8 @@ namespace View
         public bool IsShowing => _stateMachine.CurrentState == _onState;
         public bool IsTransitioning => _stateMachine.CurrentState == _transitionOnState || _stateMachine.CurrentState == _transitionOffState;
 
-        public event Action OnTransitionOnCompleted = delegate { };
-        public event Action OnTransitionOffCompleted = delegate { };
+        public Action OnTransitionOnCompleted { get; set; } = delegate { };
+        public Action OnTransitionOffCompleted { get; set; } = delegate { };
 
         [SerializeField]
         protected GameObject _child;
@@ -23,16 +23,16 @@ namespace View
         protected StaticState _onState;
         protected TransitionState _transitionOffState;
 
-        private StateMachine _stateMachine;
-        private Animation _animation;
+        protected StateMachine _stateMachine;
+        protected Animation _animation;
 
         public virtual void Init()
         {
             _animation = GetComponent<Animation>();
 
             _offState = new StaticState();
-            _offState.OnEnterAction += DisableView;
             _offState.OnEnterAction += OnTransitionOffCompleted;
+            _offState.OnEnterAction += DisableView;
             _offState.OnExitAction += EnableView;
 
             _stateMachine = new StateMachine(_offState);
@@ -66,19 +66,19 @@ namespace View
         protected abstract void UpdateView();
         protected virtual void DisableView() => _child.SetActive(false);
 
-        private void TransitionOnComplete()
+        protected void TransitionOnComplete()
         {
             _stateMachine.StateExitComplete();
             _stateMachine.ChangeState(_onState);
         }
 
-        private void TransitionOffComplete()
+        protected void TransitionOffComplete()
         {
             _stateMachine.StateExitComplete();
             _stateMachine.ChangeState(_offState);
         }
 
-        private void TryAddAnimationClip(AnimationClip clip)
+        protected void TryAddAnimationClip(AnimationClip clip)
         {
             if (_animation.GetClip(clip.name) == null)
             {

@@ -32,6 +32,7 @@ namespace View
         {
             _menuController.UpdateViewController();
 
+            //Slide Left
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.SlideLeft);
@@ -48,6 +49,7 @@ namespace View
                 _menuController.Show(MenuView.SettingsMenu, transitionDataSet.OnClip, transitionDataSet.OffClip);
             }
 
+            //Slide Right
             if (Input.GetKeyDown(KeyCode.A))
             {
                 TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.SlideRight);
@@ -62,6 +64,23 @@ namespace View
             {
                 TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.SlideRight);
                 _menuController.Show(MenuView.SettingsMenu, transitionDataSet.OnClip, transitionDataSet.OffClip);
+            }
+
+            //Bounce
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
+                _menuController.Show(MenuView.None, transitionDataSet.OnClip, transitionDataSet.OffClip, false);
+            }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
+                _menuController.Show(MenuView.MainMenu, transitionDataSet.OnClip, transitionDataSet.OffClip, false);
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
+                _menuController.Show(MenuView.SettingsMenu, transitionDataSet.OnClip, transitionDataSet.OffClip, false);
             }
         }
 

@@ -10,8 +10,8 @@ namespace View
     {
         TEnum ViewType { get; }
 
-        event Action OnTransitionOnCompleted;
-        event Action OnTransitionOffCompleted;
+        Action OnTransitionOnCompleted { get; set; }
+        Action OnTransitionOffCompleted { get; set; }
 
         bool IsShowing { get; }
         bool IsTransitioning { get; }
