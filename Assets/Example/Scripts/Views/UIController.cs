@@ -18,14 +18,14 @@ namespace View
 
         public void Start()
         {
-            _menuController = CreateViewController<MenuView>();
+            _menuController = CreateViewController(MenuView.None);
         }
 
-        private ViewController<TEnum> CreateViewController<TEnum>() where TEnum : struct
+        private ViewController<TEnum> CreateViewController<TEnum>(TEnum startState) where TEnum : struct
         {
             IView<TEnum>[] views = GetComponentsInChildren<IView<TEnum>>(true);
 
-            return new ViewController<TEnum>(views);
+            return new ViewController<TEnum>(views, startState);
         }
 
         public void Update()

@@ -14,7 +14,7 @@ namespace View
         private IView<TEnum> _exitingState;
         private IView<TEnum> _incomingState;
 
-        public ViewController(IView<TEnum>[] views, TEnum startState = default)
+        public ViewController(IView<TEnum>[] views, TEnum startState)
         {
             InitializeViews(views);
             ChangeState(_views[startState]);
@@ -70,12 +70,13 @@ namespace View
                 return;
             }
 
-            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Showing ({newState})");
+            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Showing ({newState.GetType()})");
 
             if (_exitingState != null)
             {
-                //return;
-                InterruptOngoingTransitions();
+                return;
+                //TODO Interrupting still slightly unstable
+                //InterruptOngoingTransitions();
             }
 
             if (CurrentState == null || immediate)
@@ -95,7 +96,6 @@ namespace View
             _exitingState = null;
 
             CurrentState?.Interupt();
-            CurrentState?.ExitState();
             CurrentState = null;
 
             _incomingState = null;

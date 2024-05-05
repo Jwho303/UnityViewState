@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using State;
 
 namespace View
@@ -24,15 +25,21 @@ namespace View
         protected TransitionState _transitionOffState;
 
         protected StateMachine _stateMachine;
+        protected RectTransform _rectTransform;
         protected Animation _animation;
+
+        private Vector3 _initialPosition;
 
         public virtual void Init()
         {
+            _rectTransform = GetComponent<RectTransform>();
             _animation = GetComponent<Animation>();
+            _initialPosition = _rectTransform.anchoredPosition;
 
             _offState = new StaticState();
             _offState.OnEnterAction += OnTransitionOffCompleted;
             _offState.OnEnterAction += DisableView;
+            _offState.OnEnterAction += ReturnToInitialPosition;
             _offState.OnExitAction += EnableView;
 
             _stateMachine = new StateMachine(_offState);
@@ -84,6 +91,11 @@ namespace View
             {
                 _animation.AddClip(clip, clip.name);
             }
+        }
+
+        protected void ReturnToInitialPosition()
+        {
+            _rectTransform.anchoredPosition = _initialPosition;
         }
     }
 }
