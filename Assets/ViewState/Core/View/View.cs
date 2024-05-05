@@ -12,23 +12,23 @@ namespace View
         public bool IsShowing => _stateMachine.CurrentState == _onState;
         public bool IsTransitioning => _stateMachine.CurrentState == _transitionOnState || _stateMachine.CurrentState == _transitionOffState;
 
-        public event Action OnTransitionOnCompleted;
-        public event Action OnTransitionOffCompleted;
-
-        private StateMachine _stateMachine;
-
-        private StaticState _offState;
-        private TransitionState _transitionOnState;
-        private StaticState _onState;
-        private TransitionState _transitionOffState;
+        public event Action OnTransitionOnCompleted = delegate { };
+        public event Action OnTransitionOffCompleted = delegate { };
 
         [SerializeField]
         protected GameObject _child;
 
+        protected StaticState _offState;
+        protected TransitionState _transitionOnState;
+        protected StaticState _onState;
+        protected TransitionState _transitionOffState;
+
+        private StateMachine _stateMachine;
+        private Animation _animation;
+
         public virtual void Init()
         {
-            Debug.Log("Init");
-            Animation animation = GetComponent<Animation>();
+            _animation = GetComponent<Animation>();
 
             _offState = new StaticState();
             _offState.OnEnterAction += DisableView;
@@ -37,45 +37,53 @@ namespace View
 
             _stateMachine = new StateMachine(_offState);
 
-            _transitionOnState = new TransitionState(animation);
-            _transitionOnState.OnAnimationCompleteAction += OnTransitionOnComplete;
+            _transitionOnState = new TransitionState(_animation);
+            _transitionOnState.OnTransitionCompleteAction += TransitionOnComplete;
 
             _onState = new StaticState();
             _onState.OnEnterAction += OnTransitionOnCompleted;
             _onState.OnUpdateAction += UpdateView;
 
-            _transitionOffState = new TransitionState(animation);
-            _transitionOffState.OnAnimationCompleteAction += OnTransitionOffComplete;
+            _transitionOffState = new TransitionState(_animation);
+            _transitionOffState.OnTransitionCompleteAction += TransitionOffComplete;
         }
 
         public void EnterState() => _stateMachine.ChangeState(_transitionOnState);
         public void ExitState() => _stateMachine.ChangeState(_transitionOffState);
         public void UpdateState() => _stateMachine.Update();
-        [ContextMenu("Interupt")]
         public void Interupt() => _stateMachine.CurrentState.Interupt();
-
-        public virtual void EnableView() => _child.SetActive(true);
-        public abstract void UpdateView();
-        public virtual void DisableView() => _child.SetActive(false);
 
         public void SetAnimationClips(AnimationClip onClip, AnimationClip offClip)
         {
+            TryAddAnimationClip(onClip);
+            TryAddAnimationClip(offClip);
+
             _transitionOnState.AnimationClip = onClip;
             _transitionOffState.AnimationClip = offClip;
         }
 
-        private void OnTransitionOnComplete()
+        protected virtual void EnableView() => _child.SetActive(true);
+        protected abstract void UpdateView();
+        protected virtual void DisableView() => _child.SetActive(false);
+
+        private void TransitionOnComplete()
         {
-            Debug.Log("[ViewStateMachine] OnTransitionOnComplete");
             _stateMachine.StateExitComplete();
             _stateMachine.ChangeState(_onState);
         }
 
-        private void OnTransitionOffComplete()
+        private void TransitionOffComplete()
         {
-            Debug.Log("[ViewStateMachine] OnTransitionOffComplete");
             _stateMachine.StateExitComplete();
             _stateMachine.ChangeState(_offState);
+        }
+
+        private void TryAddAnimationClip(AnimationClip clip)
+        {
+            if (_animation.GetClip(clip.name) == null)
+            {
+                _animation.AddClip(clip, clip.name);
+            }
         }
     }
 }

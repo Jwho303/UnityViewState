@@ -8,7 +8,7 @@ namespace View
     {
         public MenuView ViewType => MenuView.MainMenu;
 
-        public override void UpdateView()
+        protected override void UpdateView()
         {
             
         }

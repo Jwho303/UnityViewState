@@ -24,7 +24,6 @@ namespace View
         private ViewController<TEnum> CreateViewController<TEnum>() where TEnum : struct
         {
             IView<TEnum>[] views = GetComponentsInChildren<IView<TEnum>>(true);
-            Debug.Log($"[UIController] Found ({views.Length}) {typeof(TEnum).Name} views");
 
             return new ViewController<TEnum>(views);
         }

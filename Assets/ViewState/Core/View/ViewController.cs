@@ -10,23 +10,23 @@ namespace View
     public class ViewController<TEnum> where TEnum : struct
     {
         public TEnum CurrentView => CurrentState.ViewType;
-
         public IView<TEnum> CurrentState { get; private set; }
-        private IView<TEnum> _exitingState;
 
         private Dictionary<TEnum, IView<TEnum>> _views = new Dictionary<TEnum, IView<TEnum>>();
+        private IView<TEnum> _exitingState;
 
-        public ViewController(IView<TEnum>[] views)
+        public ViewController(IView<TEnum>[] views, TEnum startState = default)
         {
+            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Assigning ({views.Length}) views");
             for (int i = 0; i < views.Length; i++)
             {
                 _views.Add(views[i].ViewType, views[i]);
-                views[i].Init();
                 views[i].OnTransitionOnCompleted += HandleViewTransitionOnCompleted;
                 views[i].OnTransitionOffCompleted += HandleViewTransitionOffCompleted;
+                views[i].Init();
             }
 
-            ChangeState(_views[default]);
+            ChangeState(_views[startState]);
         }
 
         public void UpdateViewController()
@@ -40,9 +40,10 @@ namespace View
             if (!_views.ContainsKey(viewToShow))
             {
                 Debug.LogError($"[ViewController] No View! ({viewToShow})");
+                return;
             }
 
-            Debug.Log($"[ViewController] Showing ({viewToShow})");
+            Debug.Log($"[ViewController-{typeof(TEnum).Name}] Showing ({viewToShow})");
             ChangeState(_views[viewToShow]);
         }
 
@@ -56,13 +57,7 @@ namespace View
 
         private void ChangeState(IView<TEnum> newState)
         {
-            if (CurrentState == null)
-            {
-                CurrentState = newState;
-                CurrentState.EnterState();
-            }
-
-            if (CurrentState.Equals(newState))
+            if (CurrentState == newState || (CurrentState != null && CurrentState.Equals(newState)))
             {
                 return;
             }
@@ -77,15 +72,9 @@ namespace View
             CurrentState.EnterState();
         }
 
-        private void StateExitComplete()
-        {
-            Debug.Log("Exit Completed");
-            _exitingState = null;
-        }
-
         private void HandleViewTransitionOnCompleted()
         {
-
+            _exitingState = null;
         }
 
         private void HandleViewTransitionOffCompleted()

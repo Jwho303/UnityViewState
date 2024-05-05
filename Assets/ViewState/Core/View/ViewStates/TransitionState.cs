@@ -10,7 +10,7 @@ namespace View
     {
         public Animation Animation;
         public AnimationClip AnimationClip;
-        public Action OnAnimationCompleteAction = delegate { };
+        public Action OnTransitionCompleteAction = delegate { };
 
         public TransitionState(Animation animation)
         {
@@ -19,11 +19,6 @@ namespace View
 
         public void EnterState()
         {
-            if (Animation.GetClip(Animation.name) == null)
-            {
-                Animation.AddClip(AnimationClip, AnimationClip.name);
-            }
-
             Animation.clip = AnimationClip;
             Animation.Play(AnimationClip.name);
         }
@@ -53,7 +48,7 @@ namespace View
         private void TransitionComplete()
         {
             Animation[AnimationClip.name].normalizedTime = 1.0f;
-            OnAnimationCompleteAction();
+            OnTransitionCompleteAction();
         }
     }
 }

@@ -18,9 +18,5 @@ namespace View
 
         void Init();
         void SetAnimationClips(AnimationClip onClip, AnimationClip offClip);
-
-        void DisableView();
-        void UpdateView();
-        void EnableView();
     }
 }

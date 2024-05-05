@@ -37,7 +37,6 @@ namespace State
 
         public void StateExitComplete()
         {
-            Debug.Log("Exit Completed");
             _exitingState = null;
         }
     }
