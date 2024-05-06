@@ -28,5 +28,5 @@ Facilitates transitioning between states and handles interruptions.
 ## Demo
 https://github.com/Jwho303/UnityViewState/assets/5286421/951a865c-5a81-47be-a5b8-fd3c1047f80e
 ## Credits
-Silent game GUI asset set by Prinbles
+"Silent" game GUI asset set by Prinbles
 https://prinbles.itch.io/silent
