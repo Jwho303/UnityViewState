@@ -1,4 +1,4 @@
-# UnityViewState
+# Unity View State
 This Unity3D codebase provides a flexible and scalable framework for managing UI views with transition animations. The framework uses a state machine pattern to handle view states and transitions, ensuring smooth animations and transitions between different views.
 ## Structure
 ### Interfaces
