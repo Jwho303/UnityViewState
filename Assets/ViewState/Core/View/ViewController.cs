@@ -56,6 +56,11 @@ namespace View
             _views = new Dictionary<TEnum, IView<TEnum>>();
             foreach (var view in views)
             {
+                if (_views.ContainsKey(view.ViewType))
+                {
+                    Debug.LogError($"[ViewController-{typeof(TEnum).Name}] Duplicate Views! ({view.ViewType})");
+                    return;
+                }
                 _views.Add(view.ViewType, view);
                 view.OnTransitionOnCompleted += HandleViewTransitionOnCompleted;
                 view.OnTransitionOffCompleted += HandleViewTransitionOffCompleted;
