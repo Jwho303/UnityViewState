@@ -26,11 +26,7 @@ Implements IState and manages transition animations.
 A class for managing the current state of a view.
 Facilitates transitioning between states and handles interruptions.
 ## Demo
-<video width="640" height="360" controls>
-  <source src="./Media/Demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+https://github.com/Jwho303/UnityViewState/assets/5286421/951a865c-5a81-47be-a5b8-fd3c1047f80e
 ## Credits
 Silent game GUI asset set by Prinbles
 https://prinbles.itch.io/silent
