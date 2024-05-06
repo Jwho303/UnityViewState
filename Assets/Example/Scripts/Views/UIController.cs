@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 using State;
 using System;
@@ -14,11 +15,18 @@ namespace View
         [SerializeField]
         private TransitionData _transitionData;
 
-        private ViewController<MenuView> _menuController;
+        [SerializeField]
+        private Button _startButton;
 
-        public void Start()
+        private ViewController<MenuView> _menuController;
+        private ViewController<PopupView> _popupController;
+
+        private void Start()
         {
             _menuController = CreateViewController(MenuView.None);
+            _popupController = CreateViewController(PopupView.None);
+
+            _startButton.onClick.AddListener(() => { ShowMenu(MenuView.MainMenu, ViewTransition.Bounce); });
         }
 
         private ViewController<TEnum> CreateViewController<TEnum>(TEnum startState) where TEnum : struct
@@ -28,10 +36,40 @@ namespace View
             return new ViewController<TEnum>(views, startState);
         }
 
+        public void ShowMenu(MenuView view, ViewTransition transition, bool overlap = true)
+        {
+            TransitionDataSet transitionDataSet = _transitionData.GetTransition(transition);
+            _menuController.Show(view, transitionDataSet.OnClip, transitionDataSet.OffClip, overlap);
+        }
+
+        public void HideMenu()
+        {
+            TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
+            _menuController.Show(MenuView.None, transitionDataSet.OnClip, transitionDataSet.OffClip, true);
+        }
+
+        public void ShowPopup(PopupView view, ViewTransition transition, bool overlap = true)
+        {
+            TransitionDataSet transitionDataSet = _transitionData.GetTransition(transition);
+            _popupController.Show(view, transitionDataSet.OnClip, transitionDataSet.OffClip, overlap);
+        }
+
+        public void HidePopup()
+        {
+            TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
+            _popupController.Show(PopupView.None, transitionDataSet.OnClip, transitionDataSet.OffClip, true);
+        }
+
         public void Update()
         {
             _menuController.UpdateViewController();
+            _popupController.UpdateViewController();
 
+            //KeyPressSpamTest(); //For demo purposes
+        }
+
+        private void KeyPressSpamTest()
+        {
             //Slide Left
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -82,25 +120,6 @@ namespace View
                 TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.Bounce);
                 _menuController.Show(MenuView.SettingsMenu, transitionDataSet.OnClip, transitionDataSet.OffClip, false);
             }
-        }
-
-        [ContextMenu("Show")]
-        public void ShowTargetView()
-        {
-            _menuController.Show(_targetView);
-        }
-
-        [ContextMenu("Show with Animation")]
-        public void ShowTargetViewWithAnimation()
-        {
-            TransitionDataSet transitionDataSet = _transitionData.GetTransition(ViewTransition.SlideLeft);
-            _menuController.Show(_targetView, transitionDataSet.OnClip, transitionDataSet.OffClip);
-        }
-
-        [ContextMenu("Hide")]
-        public void Hide()
-        {
-            _menuController.Show(MenuView.None);
         }
     }
 
