@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace View
+namespace Jwho303.ViewState.Example
 {
     public class AboutMenu : View, IView<MenuView>
     {

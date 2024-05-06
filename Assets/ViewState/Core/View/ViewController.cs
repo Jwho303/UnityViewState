@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using State;
 using System;
 
-namespace View
+namespace Jwho303.ViewState
 {
     public class ViewController<TEnum> where TEnum : struct
     {

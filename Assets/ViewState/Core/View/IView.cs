@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using State;
 
-namespace View
+namespace Jwho303.ViewState
 {
     public interface IView<TEnum> : IState where TEnum : struct
     {

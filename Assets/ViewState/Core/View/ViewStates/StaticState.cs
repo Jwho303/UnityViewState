@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using State;
 
-namespace View
+namespace Jwho303.ViewState
 {
     public class StaticState : IState
     {

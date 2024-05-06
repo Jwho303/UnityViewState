@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
-namespace View
+namespace Jwho303.ViewState.Example
 {
     public class NonePopup : View, IView<PopupView>
     {

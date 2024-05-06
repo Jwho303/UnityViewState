@@ -1,5 +1,5 @@
 using System;
-namespace State
+namespace Jwho303.ViewState
 {
     public interface IState
     {

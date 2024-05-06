@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace View
+namespace Jwho303.ViewState.Example
 {
     public class SettingsMenu : View, IView<MenuView>
     {

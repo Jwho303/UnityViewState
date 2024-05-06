@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using State;
 using UnityEngine;
 
-namespace View
+namespace Jwho303.ViewState.Example
 {
     public class NoneMenu : View, IView<MenuView>
     {

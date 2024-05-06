@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using State;
 
-namespace View
+namespace Jwho303.ViewState
 {
     [RequireComponent(typeof(Animation))]
     public abstract class View : MonoBehaviour, IState

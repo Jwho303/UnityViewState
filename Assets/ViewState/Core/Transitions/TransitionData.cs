@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace View
+namespace Jwho303.ViewState
 {
     public enum ViewTransition
     {

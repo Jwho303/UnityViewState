@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using State;
-using System;
 
-namespace View
+namespace Jwho303.ViewState.Example
 {
     public class UIController : MonoBehaviour
     {

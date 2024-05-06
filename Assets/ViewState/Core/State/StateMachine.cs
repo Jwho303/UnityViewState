@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace State
+namespace Jwho303.ViewState
 {
     public class StateMachine
     {
