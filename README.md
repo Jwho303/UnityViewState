@@ -27,6 +27,7 @@ A class for managing the current state of a view.
 Facilitates transitioning between states and handles interruptions.
 ## Demo
 https://github.com/Jwho303/UnityViewState/assets/5286421/951a865c-5a81-47be-a5b8-fd3c1047f80e
+
 Live demo on itch.io
 https://jwho303.itch.io/unity-view-state
 ## Credits
